@@ -1,0 +1,14 @@
+.presentation {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  margin: 0 auto;
+  width: 90%;
+  height: 100%;
+}
+
+.search-box input {
+  border-radius: 5px;
+  border: 1px solid var(--border-input-color);
+}

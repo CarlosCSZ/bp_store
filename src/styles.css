@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  --ligth-gray: #d8d9e7;
+  --border-input-color: #888888;
+  --shadow-box-color: #585857;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-size: 62.5%;
+  font-family: 'Segoe UI', Roboto, 'Open Sans', 'Helvetica Neue';
+}
