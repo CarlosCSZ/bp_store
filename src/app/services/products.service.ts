@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Product, UpdateProduct } from '../models/products';
 import { environment } from '../../environments/environment.dev';
+import { catchError, map } from 'rxjs/operators';
+import { of, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -21,89 +23,92 @@ export class ProductsService {
     return this.$products();
   }
 
-  getProducts() {
+  getProducts(): Observable<Product[]> {
     return this.http
       .get<Product[]>(this.baseUrl, { headers: this.header })
-      .subscribe({
-        next: (data) => this.$products.update(() => data),
-        error: (err) => console.error('getProduct service: ', err),
-      });
+      .pipe(
+        map((data) => {
+          console.log('recibimos la data: ');
+          this.$products.update(() => data);
+          return data;
+        }),
+        catchError((err) => {
+          console.error('getProduct service: ', err);
+          return of([] as Product[]);
+        })
+      );
   }
 
-  productValidation(id: string): boolean {
-    const productFound = this.$products().find((prod) => prod.id === id);
-    if (productFound) {
-      return false;
-    }
-    return true;
+  productValidation(id: string): Observable<boolean> {
+    return this.getProducts().pipe(
+      map((products) => {
+        const productFound = products.find((prod) => prod.id === id);
+        if (productFound) {
+          return false;
+        }
+
+        return true;
+      }),
+      catchError((err) => {
+        console.error('productValidation service: ', err);
+        return of(false);
+      })
+    );
   }
 
-  createProduct(product: Product): Promise<string> {
-    return new Promise((resolve, reject) => {
-      this.http
-        .post<Product>(this.baseUrl, product, { headers: this.header })
-        .subscribe({
-          next: (data) => {
-            this.$products.update((actProducts) => {
-              return actProducts.concat(data);
-            });
-
-            resolve('Created Successfully!');
-          },
-          error: (err) => {
-            console.error('createProduct service: ', err);
-            reject('Creation Failed');
-          },
-        });
-    });
+  createProduct(product: Product): Observable<Product[]> {
+    return this.http
+      .post<Product>(this.baseUrl, product, { headers: this.header })
+      .pipe(
+        map((data) => {
+          this.$products.update((actProducts) => actProducts.concat(data));
+          return this.products;
+        }),
+        catchError((err) => {
+          console.error('createProduct service: ', err);
+          return of(this.products);
+        })
+      );
   }
 
-  UpdateProduct(updates: UpdateProduct): Promise<string> {
+  UpdateProduct(updates: UpdateProduct): Observable<string> {
     const productIndex = this.$products().findIndex(
       (product) => product.id === updates.id
     );
 
-    return new Promise((resolve, reject) => {
-      this.http
-        .put<Product>(this.baseUrl, updates, { headers: this.header })
-        .subscribe({
-          next: (data) => {
-            if (productIndex !== -1) {
-              this.$products.update((actProducts) => {
-                const updatedProducts = [...actProducts];
-                updatedProducts[productIndex] = data;
-                return updatedProducts;
-              });
+    return this.http
+      .put<Product>(this.baseUrl, updates, { headers: this.header })
+      .pipe(
+        map((data) => {
+          if (productIndex !== -1) {
+            this.$products.update((actProducts) => {
+              const updatedProducts = [...actProducts];
+              updatedProducts[productIndex] = data;
+              return updatedProducts;
+            });
+          }
 
-              resolve('Updated Successfully!');
-            }
-          },
-          error: (err) => {
-            console.error('UpdateProduct service: ', err);
-            reject('Updated Failed');
-          },
-        });
-    });
+          return 'Succesfully Updated';
+        }),
+        catchError((err) => {
+          console.error('UpdateProduct service: ', err);
+          return 'Update Failed';
+        })
+      );
   }
 
-  deleteProduct(id: string): Promise<string> {
-    const productIndex = this.$products().findIndex(
-      (product) => product.id === id
+  deleteProduct(id: string): Observable<string> {
+    return this.http
+    .delete<string>(this.baseUrl, {
+      headers: this.header,
+      params: { id },
+    })
+    .pipe(
+      map((data) => data),
+      catchError((err) => {
+        console.error('deleteProduct service: ', err);
+        return 'Deleting Failed';
+      })
     );
-
-    return new Promise((resolve, reject) => {
-      this.http
-        .delete<string>(this.baseUrl, {
-          headers: this.header,
-          params: { id },
-        })
-        .subscribe({
-          next: (data) => resolve(data),
-          error: (err) => {
-            console.error('deleteProduct service: ', err);
-            reject('Deleting Failed');
-          },
-        });
-    });
   }
 }

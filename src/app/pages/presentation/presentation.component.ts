@@ -25,6 +25,6 @@ export class PresentationComponent {
     setTimeout(() => {
       this.router.navigate(['new-product']);
       this.isExapndButton = false;
-    }, 700);
+    }, 650);
   }
 }

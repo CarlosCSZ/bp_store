@@ -1,0 +1,91 @@
+.new-product {
+  display: flex;
+  flex-direction: column;
+  margin: 40px auto;
+  align-items: center;
+  width: 90%;
+  max-width: 550px;
+  font-size: 1.4rem;
+  background-color: white;
+}
+
+.title{
+  width: 100%;
+  border-bottom: 1px solid black;
+}
+.title h2 {
+  text-align: center;
+  margin: 12px 0;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.product-form {
+  display: flex;
+  padding: 10px;
+  justify-content: space-around;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.product-form .form-value,
+.noInput {
+  display: flex;
+  flex-direction: column;
+  min-width: 42%;
+  margin-bottom: 10px;
+}
+.product-form input {
+  padding: 8px;
+  font-size: 1.4rem;
+  border-radius: 5px;
+  border: .5px solid gray;
+  outline: none;
+}
+
+.noInput input {
+  background-color: #E4E1E1;
+}
+
+.form-value input.invalid {
+  border-color: #DF0101;
+}
+
+.warning {
+  color: #DF0101;
+  font-size: 1.2rem;
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 35px 35px 20px;
+  width: 50%;
+  gap: 20px;
+}
+.form-actions button {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+.reset {
+  background-color: #d0cfcf;
+}
+.reset:hover {
+  background-color: #c5c4c4;
+}
+.submit {
+  background-color: var(--bg-yellow);
+}
+.submit:hover {
+  background-color: var(--bg-yellow-hover);
+}
+
+@media screen and (max-width: 500px) {
+  .product-form .form-value,
+  .noInput {
+    min-width: 80%;
+  }
+}

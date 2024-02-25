@@ -6,7 +6,6 @@ import {
   SimpleChanges,
   effect,
   inject,
-  signal,
 } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { format, parseISO } from 'date-fns';
@@ -40,9 +39,11 @@ export class ProductsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    if (this.products.length === 0) {
-      this.productsService.getProducts();
-    }
+    this.productsService.getProducts()
+    .subscribe({
+      next: () => console.log('Productos recuperados'),
+      error: (err) => console.log(err)
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -2,7 +2,63 @@
   <div class="title">
     <h2>Formulario de Registro</h2>
   </div>
-  <form [formGroup]="productForm">
-
+  <form
+    class="product-form"
+    [formGroup]="productForm"
+    (keyup)="chechingValue($event)"
+  >
+    <div class="form-value">
+      <label for="id">ID</label>
+      <input
+        [class.invalid]="productInvalid.id"
+        type="text"
+        formControlName="id"
+        id="id"
+        maxlength="10"
+      />
+      @if (productForm.controls["id"].dirty &&
+      productForm.controls["id"].hasError('minlength')) {
+      <small class="warning">ID debe ser mayor a 3 caracteres</small>
+      } @else if (productForm.controls["id"].dirty &&
+      (productForm.controls["id"].hasError('productExist') || productForm.controls["id"].hasError('required'))) {
+      <small class="warning">ID no valido</small>
+      }
+    </div>
+    <div class="form-value">
+      <label for="name">Nombre</label>
+      <input type="text" formControlName="name" id="name" maxlength="100" />
+    </div>
+    <div class="form-value">
+      <label for="description">Descripción</label>
+      <input
+        type="text"
+        formControlName="description"
+        id="description"
+        maxlength="200"
+      />
+    </div>
+    <div class="form-value">
+      <label for="logo">Logo</label>
+      <input type="text" formControlName="logo" id="logo" />
+    </div>
+    <div class="form-value">
+      <label for="date_release">Fecha Liberación</label>
+      <input type="date" formControlName="date_release" id="date_release" />
+    </div>
+    <div class="noInput">
+      <label for="date_revision">Fecha Revisión</label>
+      <input
+        type="date"
+        formControlName="date_revision"
+        id="date_revision"
+        readonly
+      />
+    </div>
+    <div class="form-actions">
+      <button class="reset">Reiniciar</button>
+      <button type="submit" class="submit" [disabled]="productForm.invalid">
+        Enviar
+      </button>
+    </div>
   </form>
 </section>

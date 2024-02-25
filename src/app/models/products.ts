@@ -1,4 +1,4 @@
-import { FormControl } from "@angular/forms";
+import { FormControl } from '@angular/forms';
 
 interface Product {
   id: string;
@@ -22,4 +22,13 @@ interface ProductForm {
   date_revision: FormControl<string>;
 }
 
-export { Product, UpdateProduct, ProductForm };
+interface ProductValidation {
+  id: boolean;
+  name: boolean;
+  description: boolean;
+  logo: boolean;
+  date_release: boolean;
+  date_revision: boolean;
+}
+
+export { Product, UpdateProduct, ProductForm, ProductValidation };
