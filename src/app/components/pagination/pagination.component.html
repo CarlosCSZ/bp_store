@@ -1,19 +1,27 @@
 <div class="pagination-section">
   <span>{{ resultQty }} Resultados</span>
-    <div class="action-box">
-      <div class="qty-selector">
-        <p>{{ selectedQty }}</p>
-        <button (click)="toggleDropdown()">
-          <img class="dropdown-svg" src="assets/svg/dropdown.svg" alt="toggle">
-        </button>
-      </div>
-      @if (showDropdown) {
-        <ul>
-          @for (qty of qtyFilter; track $index) {
-            <li (click)="selectQty(qty)">{{ qty }}</li>
-          }
-        </ul>
-      }
-      <div class="pagination">Here goes the paginaton</div>
+  <div class="action-box">
+    <div class="qty-selector">
+      <p>{{ selectedQty }}</p>
+      <button (click)="toggleDropdown()">
+        <img class="dropdown-svg" src="assets/svg/dropdown.svg" alt="toggle" />
+      </button>
     </div>
+    @if (showDropdown) {
+    <ul>
+      @for (qty of qtyFilter; track $index) {
+      <li (click)="selectQty(qty)">{{ qty }}</li>
+      }
+    </ul>
+    }
+    <div class="pagination">
+      <button [disabled]="page === 1" (click)="prevPage()">
+        <img src="assets/svg/backward.svg" alt="backward" />
+      </button>
+      <span>{{ page }}/{{ total }}</span>
+      <button [disabled]="page === total" (click)="nextPage()">
+        <img src="assets/svg/forward.svg" alt="forward" />
+      </button>
+    </div>
+  </div>
 </div>

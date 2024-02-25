@@ -29,11 +29,12 @@ export class ProductsComponent implements OnInit, OnChanges {
   selectedQty: number = 5;
   resultQty: number = this.selectedQty;
   products: Product[] = [];
+  totalProducts: number = this.productsService.products.length;
   @Input() searchedValue: string = '';
 
   constructor() {
     effect(() => {
-      console.log('hubo un cambio');
+      console.log('hubo un cambio - product component');
       this.resultsToShow();
     });
   }
@@ -45,11 +46,12 @@ export class ProductsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('changes: ', changes)
     const searchedValueChanged = changes['searchedValue'];
     if (searchedValueChanged && this.searchedValue.length > 0) {
       this.resultsToShow();
-      this.products = this.products.filter((product) => product.name.includes(this.searchedValue))
+      this.products = this.products.filter((product) =>
+        product.name.includes(this.searchedValue)
+      );
       this.resultQty = this.products.length;
       return;
     }
@@ -62,7 +64,7 @@ export class ProductsComponent implements OnInit, OnChanges {
   }
 
   resultsToShow() {
-    if (this.productsService.products.length > this.selectedQty) {
+    if (this.totalProducts > this.selectedQty) {
       this.products = [...this.productsService.products].slice(
         0,
         this.selectedQty
@@ -70,6 +72,7 @@ export class ProductsComponent implements OnInit, OnChanges {
       this.resultQty = this.selectedQty;
     } else {
       this.products = this.productsService.products;
+      this.totalProducts = this.productsService.products.length;
       this.resultQty = this.products.length;
     }
   }
@@ -77,6 +80,16 @@ export class ProductsComponent implements OnInit, OnChanges {
   onQtyChanged(quantity: number) {
     this.selectedQty = quantity;
     this.resultsToShow();
+  }
+
+  onPageChanged(page: number) {
+    const offset = this.selectedQty * (page - 1);
+    const endSlice = this.selectedQty * page;
+    this.products = this.productsService.products.slice(
+      offset,
+      endSlice
+    );
+    this.resultQty = this.products.length;
   }
 
   deleteProduct(id: string) {

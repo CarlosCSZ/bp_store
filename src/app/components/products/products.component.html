@@ -13,17 +13,24 @@
       </thead>
       <tbody>
         @for (product of products; track product.id) {
-          <tr [id]="product.id">
-            <td><img [src]="product.logo" alt="Logo"></td>
-            <td>{{ product.name }}</td>
-            <td>{{ product.description }}</td>
-            <td>{{ formatDateStr(product.date_release) }}</td>
-            <td>{{ formatDateStr(product.date_revision) }}</td>
-            <td class="options" (click)="deleteProduct(product.id)"><img src="assets/svg/ellipsis.svg" alt="options"></td>
-          </tr>
+        <tr [id]="product.id">
+          <td><img [src]="product.logo" alt="Logo" /></td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.description }}</td>
+          <td>{{ formatDateStr(product.date_release) }}</td>
+          <td>{{ formatDateStr(product.date_revision) }}</td>
+          <td class="options" (click)="deleteProduct(product.id)">
+            <img src="assets/svg/ellipsis.svg" alt="options" />
+          </td>
+        </tr>
         }
       </tbody>
     </table>
   </div>
-  <app-pagination (qtyChanged)="onQtyChanged($event)" [resultQty]="resultQty"></app-pagination>
+  <app-pagination
+    (qtyChanged)="onQtyChanged($event)"
+    (pageChanged)="onPageChanged($event)"
+    [resultQty]="resultQty"
+    [totalProducts]="totalProducts"
+  ></app-pagination>
 </section>

@@ -15,79 +15,13 @@ export class ProductsService {
     authorId: environment.authorId,
   });
 
-  private $products = signal<Product[]>([
-    {
-      id: '128-crd',
-      name: 'tarjeta master',
-      description: 'Tarjeta ilimitada de consumo',
-      logo: 'https://img.freepik.com/vector-premium/icono-tarjetas-credito-simbolo-pago-signo-cuenta-bancaria_53562-15455.jpg',
-      date_release: '2024-02-24T00:00:00.000+00:00',
-      date_revision: '2025-02-24T00:00:00.000+00:00',
-    },
-    {
-      id: 'lt-crd',
-      name: 'tarjeta junior',
-      description: 'Tarjeta de consumo limitado',
-      logo: 'https://c0.klipartz.com/pngpicture/242/982/gratis-png-visa-logo-tarjeta-de-credito-e-commerce-visa-mastercard-visa-thumbnail.png',
-      date_release: '2023-12-24T00:00:00.000+00:00',
-      date_revision: '2024-12-24T00:00:00.000+00:00',
-    },
-    {
-      id: '128-crd',
-      name: 'tarjeta master',
-      description: 'Tarjeta ilimitada de consumo',
-      logo: 'https://img.freepik.com/vector-premium/icono-tarjetas-credito-simbolo-pago-signo-cuenta-bancaria_53562-15455.jpg',
-      date_release: '2024-02-24T00:00:00.000+00:00',
-      date_revision: '2025-02-24T00:00:00.000+00:00',
-    },
-    {
-      id: 'lt-crd',
-      name: 'tarjeta junior',
-      description: 'Tarjeta de consumo limitado',
-      logo: 'https://c0.klipartz.com/pngpicture/242/982/gratis-png-visa-logo-tarjeta-de-credito-e-commerce-visa-mastercard-visa-thumbnail.png',
-      date_release: '2023-12-24T00:00:00.000+00:00',
-      date_revision: '2024-12-24T00:00:00.000+00:00',
-    },
-    {
-      id: '128-crd',
-      name: 'tarjeta master',
-      description: 'Tarjeta ilimitada de consumo',
-      logo: 'https://img.freepik.com/vector-premium/icono-tarjetas-credito-simbolo-pago-signo-cuenta-bancaria_53562-15455.jpg',
-      date_release: '2024-02-24T00:00:00.000+00:00',
-      date_revision: '2025-02-24T00:00:00.000+00:00',
-    },
-    {
-      id: 'lt-crd',
-      name: 'tarjeta junior',
-      description: 'Tarjeta de consumo limitado',
-      logo: 'https://c0.klipartz.com/pngpicture/242/982/gratis-png-visa-logo-tarjeta-de-credito-e-commerce-visa-mastercard-visa-thumbnail.png',
-      date_release: '2023-12-24T00:00:00.000+00:00',
-      date_revision: '2024-12-24T00:00:00.000+00:00',
-    },
-    {
-      id: '128-crd',
-      name: 'tarjeta master',
-      description: 'Tarjeta ilimitada de consumo',
-      logo: 'https://img.freepik.com/vector-premium/icono-tarjetas-credito-simbolo-pago-signo-cuenta-bancaria_53562-15455.jpg',
-      date_release: '2024-02-24T00:00:00.000+00:00',
-      date_revision: '2025-02-24T00:00:00.000+00:00',
-    },
-    {
-      id: 'lt-crd',
-      name: 'tarjeta junior',
-      description: 'Tarjeta de consumo limitado',
-      logo: 'https://c0.klipartz.com/pngpicture/242/982/gratis-png-visa-logo-tarjeta-de-credito-e-commerce-visa-mastercard-visa-thumbnail.png',
-      date_release: '2023-12-24T00:00:00.000+00:00',
-      date_revision: '2024-12-24T00:00:00.000+00:00',
-    },
-  ]);
+  private $products = signal<Product[]>([]);
 
   get products(): Product[] {
     return this.$products();
   }
 
   getProducts() {
-    console.log('vamos a traer productos')
     return this.http
       .get<Product[]>(this.baseUrl, { headers: this.header })
       .subscribe({
