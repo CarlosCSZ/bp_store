@@ -6,6 +6,15 @@
       [value]="searchedValue()"
       (keyup)="onSearching($event)"
     />
+    <div
+      class="add-button"
+      [class.expand]="isExapndButton"
+      (click)="onAddProduct()"
+    >
+      @if (!isExapndButton) {
+      <img src="assets/svg/add.svg" alt="add" />
+      }
+    </div>
   </div>
   <app-products [searchedValue]="searchedValue()"></app-products>
 </section>

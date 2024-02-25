@@ -30,6 +30,14 @@ export class ProductsService {
       });
   }
 
+  productValidation(id: string): boolean {
+    const productFound = this.$products().find((prod) => prod.id === id);
+    if (productFound) {
+      return false;
+    }
+    return true;
+  }
+
   createProduct(product: Product): Promise<string> {
     return new Promise((resolve, reject) => {
       this.http

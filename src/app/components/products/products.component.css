@@ -14,15 +14,14 @@
 .products-table::-webkit-scrollbar {
   width: 4px;
 }
-
 .products-table::-webkit-scrollbar-thumb {
   background-color: #6c757d;
   border-radius: 3px;
 }
-
 .products-table::-webkit-scrollbar-track {
   background-color: #f8f9fa;
 }
+
 table {
   width: 100%;
   border-collapse: collapse;

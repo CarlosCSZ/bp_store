@@ -8,9 +8,40 @@
   height: 100%;
 }
 
+.search-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .search-box input {
   border-radius: 5px;
   border: 1px solid var(--border-input-color);
   color: black;
   padding: 2px;
+}
+
+.add-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #ffdd00;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: transform 0.6s;
+}
+.add-button img {
+  width: 20px;
+  height: 20px;
+}
+
+.add-button:hover {
+  width: 40px;
+  height: 40px;
+}
+.add-button.expand {
+  margin-right: 20px;
+  transform: scale(65);
 }
