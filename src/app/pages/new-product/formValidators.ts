@@ -24,11 +24,12 @@ function dateReleaseValidation(
   if (control.value) {
     const currentDate = new Date();
     const parsedDate = formatDateStr(control.value);
-    const releaseDate = new Date(parsedDate);
-    console.log('dateReleaseValidation: ', control.value);
+    const releaseDate = new Date(parsedDate + ' 23:59');
+    console.log('dateReleaseValidation: ', currentDate);
 
     if (isNaN(releaseDate.getTime()) || releaseDate < currentDate) {
       console.log('dateReleaseValidation validation: ', releaseDate);
+      console.log('validation: ', releaseDate < currentDate);
       return of({ invalidDateRelease: true });
     }
   }

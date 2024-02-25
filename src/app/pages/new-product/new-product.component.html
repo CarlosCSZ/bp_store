@@ -1,10 +1,15 @@
 <section class="new-product">
   <div class="title">
+    <div class="back-home" (click)="homePage()">
+      <img src="assets/svg/home.svg" alt="home">
+      <p>Home</p>
+    </div>
     <h2>Formulario de Registro</h2>
   </div>
   <form
     class="product-form"
     [formGroup]="productForm"
+    (ngSubmit)="onSubmit()"
     (keyup)="chechingValue($event)"
   >
     <div class="form-value">
@@ -18,32 +23,71 @@
       />
       @if (productForm.controls["id"].dirty &&
       productForm.controls["id"].hasError('minlength')) {
-      <small class="warning">ID debe ser mayor a 3 caracteres</small>
+      <small class="warning">ID debe contener entre 2 y 10 caracteres</small>
       } @else if (productForm.controls["id"].dirty &&
-      (productForm.controls["id"].hasError('productExist') || productForm.controls["id"].hasError('required'))) {
+      (productForm.controls["id"].hasError('productExist') ||
+      productForm.controls["id"].hasError('required'))) {
       <small class="warning">ID no valido</small>
       }
     </div>
     <div class="form-value">
       <label for="name">Nombre</label>
-      <input type="text" formControlName="name" id="name" maxlength="100" />
+      <input
+        [class.invalid]="productInvalid.name"
+        type="text"
+        formControlName="name"
+        id="name"
+        maxlength="100"
+      />
+      @if (productForm.controls["name"].dirty &&
+      productForm.controls["name"].hasError('minlength')) {
+      <small class="warning"
+        >Debe contener entre 5 y 100 caracteres</small
+      >
+      }
     </div>
     <div class="form-value">
       <label for="description">Descripción</label>
       <input
+        [class.invalid]="productInvalid.description"
         type="text"
         formControlName="description"
         id="description"
         maxlength="200"
       />
+      @if (productForm.controls["description"].dirty &&
+      productForm.controls["description"].hasError('minlength')) {
+      <small class="warning"
+        >Debe contener entre 10 y 200 caracteres</small
+      >
+      }
     </div>
     <div class="form-value">
       <label for="logo">Logo</label>
-      <input type="text" formControlName="logo" id="logo" />
+      <input
+        [class.invalid]="productInvalid.logo"
+        type="text"
+        formControlName="logo"
+        id="logo"
+      />
+      @if (productForm.controls["logo"].dirty &&
+      productForm.controls["logo"].hasError('pattern')) {
+      <small class="warning">Debe una url de imagen valida</small>
+      }
     </div>
     <div class="form-value">
       <label for="date_release">Fecha Liberación</label>
-      <input type="date" formControlName="date_release" id="date_release" />
+      <input
+        [class.invalid]="productInvalid.date_release"
+        type="date"
+        formControlName="date_release"
+        id="date_release"
+        (change)="formatDateRevision($event)"
+      />
+      @if (productForm.controls["date_release"].dirty &&
+      productForm.controls["date_release"].hasError('invalidDateRelease')) {
+      <small class="warning">Debe ser una fecha actual o superior</small>
+      }
     </div>
     <div class="noInput">
       <label for="date_revision">Fecha Revisión</label>
@@ -51,11 +95,12 @@
         type="date"
         formControlName="date_revision"
         id="date_revision"
+        [value]="dateRevisionValue"
         readonly
       />
     </div>
     <div class="form-actions">
-      <button class="reset">Reiniciar</button>
+      <button class="reset" (click)="onReset()">Reiniciar</button>
       <button type="submit" class="submit" [disabled]="productForm.invalid">
         Enviar
       </button>

@@ -9,13 +9,33 @@
   background-color: white;
 }
 
-.title{
+.title {
+  display: flex;
   width: 100%;
   border-bottom: 1px solid black;
 }
+
+.back-home {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 70px;
+  height: 40px;
+  margin: auto 0 auto 10px;
+  border-radius: 8px;
+  background-color: #c5c4c4;
+}
+
+.back-home img {
+  width: 20px;
+  height: 20px;
+}
+
 .title h2 {
   text-align: center;
-  margin: 12px 0;
+  margin: 12px 0 12px 75px;
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: 1px;
@@ -28,6 +48,7 @@
   flex-direction: row;
   flex-wrap: wrap;
 }
+
 .product-form .form-value,
 .noInput {
   display: flex;
@@ -35,6 +56,7 @@
   min-width: 42%;
   margin-bottom: 10px;
 }
+
 .product-form input {
   padding: 8px;
   font-size: 1.4rem;
@@ -64,21 +86,26 @@
   width: 50%;
   gap: 20px;
 }
+
 .form-actions button {
   padding: 10px 15px;
   border-radius: 5px;
   border: none;
   cursor: pointer;
 }
+
 .reset {
   background-color: #d0cfcf;
 }
+
 .reset:hover {
   background-color: #c5c4c4;
 }
+
 .submit {
   background-color: var(--bg-yellow);
 }
+
 .submit:hover {
   background-color: var(--bg-yellow-hover);
 }
@@ -87,5 +114,14 @@
   .product-form .form-value,
   .noInput {
     min-width: 80%;
+  }
+
+  .title {
+    justify-content: center;
+    gap: 10px;
+  }
+  .title h2 {
+    margin: 12px 0;
+    font-size: 1.8re,;
   }
 }
