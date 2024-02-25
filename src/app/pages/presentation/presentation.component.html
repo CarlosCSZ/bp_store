@@ -1,6 +1,11 @@
 <section class="presentation">
   <div class="search-box">
-    <input type="text" placeholder="Search...">
+    <input
+      type="text"
+      placeholder="Search..."
+      [value]="searchedValue()"
+      (keyup)="onSearching($event)"
+    />
   </div>
-  <app-products></app-products>
+  <app-products [searchedValue]="searchedValue()"></app-products>
 </section>

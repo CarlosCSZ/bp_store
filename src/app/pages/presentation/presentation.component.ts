@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ProductsComponent } from '../../components/products/products.component';
 
 @Component({
@@ -9,5 +9,10 @@ import { ProductsComponent } from '../../components/products/products.component'
   styleUrl: './presentation.component.css'
 })
 export class PresentationComponent {
+  searchedValue = signal<string>('');
 
+  onSearching(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.searchedValue.update(() => input.value.trim());
+  }
 }

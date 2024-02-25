@@ -8,38 +8,22 @@
           <th>Descripción <span>i</span></th>
           <th>Fecha de liberación <span>i</span></th>
           <th>Fecha de reestructuración <span>i</span></th>
+          <th class="options"></th>
         </tr>
       </thead>
       <tbody>
-        @for (product of products; track $index) {
-          <tr>
-            <td><img src="path/to/logo.jpg" alt="Logo"></td>
-            <td>Nombre del Producto 1</td>
-            <td>Descripción del Producto 1</td>
-            <td>Fecha de liberación 1</td>
-            <td>Fecha de reestructuración 1</td>
+        @for (product of products; track product.id) {
+          <tr [id]="product.id">
+            <td><img [src]="product.logo" alt="Logo"></td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.description }}</td>
+            <td>{{ formatDateStr(product.date_release) }}</td>
+            <td>{{ formatDateStr(product.date_revision) }}</td>
+            <td class="options" (click)="deleteProduct(product.id)"><img src="assets/svg/ellipsis.svg" alt="options"></td>
           </tr>
         }
       </tbody>
     </table>
   </div>
-  <div class="pagination-sec">
-    <span>{{ selectedQty() }} Resultados</span>
-    <div class="action-box">
-      <div class="qty-selector">
-        <p>{{ selectedQty() }}</p>
-        <button (click)="toggleDropdown()">
-          <img class="dropdown-svg" src="assets/svg/dropdown.svg" alt="toggle">
-        </button>
-      </div>
-      @if (showDropdown) {
-        <ul>
-          @for (qty of qtyFilter; track $index) {
-            <li (click)="selectQty(qty)">{{ qty }}</li>
-          }
-        </ul>
-      }
-      <div class="pagination">Here goes the paginaton</div>
-    </div>
-  </div>
+  <app-pagination (qtyChanged)="onQtyChanged($event)" [resultQty]="resultQty"></app-pagination>
 </section>
