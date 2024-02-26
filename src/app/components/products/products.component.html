@@ -17,10 +17,16 @@
           <td><img [src]="product.logo" alt="Logo" /></td>
           <td>{{ product.name }}</td>
           <td>{{ product.description }}</td>
-          <td>{{ formatDateStr(product.date_release) }}</td>
-          <td>{{ formatDateStr(product.date_revision) }}</td>
-          <td class="options" (click)="deleteProduct(product.id)">
-            <img src="assets/svg/ellipsis.svg" alt="options" />
+          <td>{{ formatApiDate(product.date_release) }}</td>
+          <td>{{ formatApiDate(product.date_revision) }}</td>
+          <td class="options" (click)="toggleMenu(product.id)">
+            <img class="menu" src="assets/svg/ellipsis.svg" alt="options" />
+            @if (product.showMenu) {
+              <ul class="options-menu">
+                <li (click)="redirectPage(product, 'edit-product')"><img src="assets/svg/edit.svg" alt="edit">Editar</li>
+                <li (click)="redirectPage(product, 'delete')"><img src="assets/svg/delete.svg" alt="delete">Borrar</li>
+              </ul>
+            }
           </td>
         </tr>
         }

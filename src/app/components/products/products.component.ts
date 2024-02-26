@@ -10,9 +10,11 @@ import {
 import { HttpClientModule } from '@angular/common/http';
 import { format, parseISO } from 'date-fns';
 
-import { Product } from '../../models/products';
+import { Product, ProductPresentation } from '../../models/products';
 import { ProductsService } from '../../services/products.service';
 import { PaginationComponent } from '../pagination/pagination.component';
+import { Router } from '@angular/router';
+import { formatDateStr } from '../../utils/datesFormater';
 
 @Component({
   selector: 'app-products',
@@ -27,11 +29,11 @@ export class ProductsComponent implements OnInit, OnChanges {
   showDropdown: boolean = false;
   selectedQty: number = 5;
   resultQty: number = this.selectedQty;
-  products: Product[] = [];
+  products: ProductPresentation[] = [];
   totalProducts: number = this.productsService.products.length;
   @Input() searchedValue: string = '';
 
-  constructor() {
+  constructor(private router: Router) {
     effect(() => {
       console.log('hubo un cambio - product component');
       this.resultsToShow();
@@ -39,10 +41,9 @@ export class ProductsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.productsService.getProducts()
-    .subscribe({
+    this.productsService.getProducts().subscribe({
       next: () => console.log('Productos recuperados'),
-      error: (err) => console.log(err)
+      error: (err) => console.log(err),
     });
   }
 
@@ -59,20 +60,28 @@ export class ProductsComponent implements OnInit, OnChanges {
     this.resultsToShow();
   }
 
-  formatDateStr(dateApi: string): string {
-    const parsedDate = parseISO(dateApi);
-    return format(parsedDate, 'dd/MM/yyyy');
+  formatApiDate(dateApi: string): string {
+    return formatDateStr(dateApi);
   }
 
   resultsToShow() {
     if (this.totalProducts > this.selectedQty) {
-      this.products = [...this.productsService.products].slice(
-        0,
-        this.selectedQty
-      );
+      this.products = this.productsService.products
+        .map((product) => {
+          return {
+            ...product,
+            showMenu: false,
+          };
+        })
+        .slice(0, this.selectedQty);
       this.resultQty = this.selectedQty;
     } else {
-      this.products = this.productsService.products;
+      this.products = this.productsService.products.map((product) => {
+        return {
+          ...product,
+          showMenu: false,
+        };
+      });
       this.totalProducts = this.productsService.products.length;
       this.resultQty = this.products.length;
     }
@@ -86,14 +95,37 @@ export class ProductsComponent implements OnInit, OnChanges {
   onPageChanged(page: number) {
     const offset = this.selectedQty * (page - 1);
     const endSlice = this.selectedQty * page;
-    this.products = this.productsService.products.slice(
-      offset,
-      endSlice
-    );
+    this.products = this.productsService.products
+    .map((product) => {
+      return {
+        ...product,
+        showMenu: false,
+      };
+    })
+    .slice(offset, endSlice);
     this.resultQty = this.products.length;
   }
 
-  deleteProduct(id: string) {
-    console.log(id);
+  toggleMenu(productId: string) {
+    const productIndex = this.products.findIndex((data) => data.id === productId);
+    if (productIndex !== -1) {
+      this.products.forEach((data) => {
+        if (data.id === productId) {
+          data.showMenu = !data.showMenu;
+        } else {
+          data.showMenu = false;
+        }
+      });
+    }
+  }
+
+  redirectPage(productPre: ProductPresentation, page: string) {
+    if (page === 'delete') {
+      console.log(productPre.id);
+    } else {
+      const { showMenu, ...product } = productPre;
+      this.productsService.updateSelectedProduct(product);
+      this.router.navigate([page]);
+    }
   }
 }
