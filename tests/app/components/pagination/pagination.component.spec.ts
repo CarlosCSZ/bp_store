@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PaginationComponent } from '@app/components/pagination/pagination.component';
+import { PaginationComponent } from '../../../../src/app/components/pagination/pagination.component';
 
 describe('PaginationComponent', () => {
   let component: PaginationComponent;

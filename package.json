@@ -31,13 +31,13 @@
     "@types/jest": "^29.5.12",
     "jest": "^29.7.0",
     "jest-preset-angular": "^14.0.3",
+    "ts-jest": "^29.1.2",
     "typescript": "~5.3.2"
   },
   "jest": {
     "preset": "jest-preset-angular",
     "setupFilesAfterEnv": [
       "<rootDir>/setup-jest.ts"
-    ],
-    "globalSetup": "jest-preset-angular/global-setup"
+    ]
   }
 }

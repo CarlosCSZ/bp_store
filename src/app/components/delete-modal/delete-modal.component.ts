@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+
 import { Product } from '../../models/products';
 import { ProductsService } from '../../services/products.service';
 import { DeleteEvent } from '../../common/enums/deleteEvent.enum';

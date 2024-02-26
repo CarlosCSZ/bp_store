@@ -28,7 +28,9 @@
     ],
     "baseUrl": "./",
     "paths": {
-      "@app/*": ["src/app/*"]
+      "@app/*": ["./src/app/*"],
+      "@test/service/*": ["../../../src/app/*"],
+      "@test/comp/*": ["../../../../src/app/*"]
     }
   },
   "angularCompilerOptions": {

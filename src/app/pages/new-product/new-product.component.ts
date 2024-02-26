@@ -6,6 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { ProductForm, ProductValidation } from '../../models/products';
 import { ProductsService } from '../../services/products.service';
@@ -13,7 +14,6 @@ import {
   idValidation,
   dateReleaseValidation,
 } from '../../common/validators/formValidators';
-import { Router } from '@angular/router';
 import { formatDateInput, formatDateStr } from '../../utils/datesFormater';
 import { ErrorMessageComponent } from '@app/components/error-message/error-message.component';
 
