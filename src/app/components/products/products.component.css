@@ -111,7 +111,7 @@ img {
   }
 }
 
-@media screen and (min-width: 1400px) {
+@media screen and (min-width: 1300px) {
   .options-menu {
     right: 120px;
   }

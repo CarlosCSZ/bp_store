@@ -1,1 +1,10 @@
-<p>delete-modal works!</p>
+<div class="modal-backdrop"></div>
+<div class="modal-main">
+  <div class="modal-content">
+    <h3>¿Estas seguro de eliminar el producto {{ selectedProduct?.name ?? '-Selecciona un producto-'  }}?</h3>
+    <div class="actions">
+      <button class="cancel" (click)="close()">Cancelar</button>
+      <button class="confirm" (click)="deleteProduct()" [disabled]="!selectedProduct">Confirmar</button>
+    </div>
+  </div>
+</div>

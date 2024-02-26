@@ -1,7 +1,7 @@
 <section class="new-product">
   <div class="title">
     <div class="back-home" (click)="homePage()">
-      <img src="assets/svg/home.svg" alt="home">
+      <img src="assets/svg/home.svg" alt="home" />
       <p>Home</p>
     </div>
     <h2>Formulario de Registro</h2>
@@ -41,9 +41,7 @@
       />
       @if (productForm.controls["name"].dirty &&
       productForm.controls["name"].hasError('minlength')) {
-      <small class="warning"
-        >Debe contener entre 5 y 100 caracteres</small
-      >
+      <small class="warning">Debe contener entre 5 y 100 caracteres</small>
       }
     </div>
     <div class="form-value">
@@ -57,9 +55,7 @@
       />
       @if (productForm.controls["description"].dirty &&
       productForm.controls["description"].hasError('minlength')) {
-      <small class="warning"
-        >Debe contener entre 10 y 200 caracteres</small
-      >
+      <small class="warning">Debe contener entre 10 y 200 caracteres</small>
       }
     </div>
     <div class="form-value">

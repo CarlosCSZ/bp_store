@@ -88,6 +88,8 @@
 }
 
 .form-actions button {
+  width: 45%;
+  min-width: 80px;
   padding: 10px 15px;
   border-radius: 5px;
   border: none;

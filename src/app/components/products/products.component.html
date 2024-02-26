@@ -22,10 +22,14 @@
           <td class="options" (click)="toggleMenu(product.id)">
             <img class="menu" src="assets/svg/ellipsis.svg" alt="options" />
             @if (product.showMenu) {
-              <ul class="options-menu">
-                <li (click)="redirectPage(product, 'edit-product')"><img src="assets/svg/edit.svg" alt="edit">Editar</li>
-                <li (click)="redirectPage(product, 'delete')"><img src="assets/svg/delete.svg" alt="delete">Borrar</li>
-              </ul>
+            <ul class="options-menu">
+              <li (click)="redirectPage(product, 'edit-product')">
+                <img src="assets/svg/edit.svg" alt="edit" />Editar
+              </li>
+              <li (click)="redirectPage(product, 'delete')">
+                <img src="assets/svg/delete.svg" alt="delete" />Borrar
+              </li>
+            </ul>
             }
           </td>
         </tr>
@@ -39,4 +43,10 @@
     [resultQty]="resultQty"
     [totalProducts]="totalProducts"
   ></app-pagination>
+  @if (openDeleteModal) {
+  <app-delete-modal
+    (closeModal)="onCloseModal($event)"
+    [selectedProduct]="selectedProduct"
+  ></app-delete-modal>
+  }
 </section>

@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Product, UpdateProduct } from '../models/products';
 import { environment } from '../../environments/environment.dev';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 
 @Injectable({
@@ -18,14 +18,19 @@ export class ProductsService {
   });
 
   private $products = signal<Product[]>([]);
-  private $selectedProduct = signal<Product>({
-    id: '',
-    name: '',
-    description: '',
-    logo: '',
-    date_release: '',
-    date_revision: ''
-  });
+  private $selectedProduct = signal<Product>(
+    JSON.parse(
+      sessionStorage.getItem('selectedProduct') ??
+        JSON.stringify({
+          id: '',
+          name: '',
+          description: '',
+          logo: '',
+          date_release: '',
+          date_revision: '',
+        })
+    )
+  );
 
   get products(): Product[] {
     return this.$products();
@@ -36,7 +41,10 @@ export class ProductsService {
   }
 
   updateSelectedProduct(product: Product) {
-    this.$selectedProduct.update(() => product);
+    this.$selectedProduct.update(() => {
+      sessionStorage.setItem('selectedProduct', JSON.stringify(product));
+      return product;
+    });
   }
 
   getProducts(): Observable<Product[]> {
@@ -44,7 +52,6 @@ export class ProductsService {
       .get<Product[]>(this.baseUrl, { headers: this.header })
       .pipe(
         map((data) => {
-          console.log('recibimos la data: ');
           this.$products.update(() => data);
           return data;
         }),
@@ -114,17 +121,42 @@ export class ProductsService {
   }
 
   deleteProduct(id: string): Observable<string> {
+    this.header.set('responseType', 'text');
     return this.http
-    .delete<string>(this.baseUrl, {
-      headers: this.header,
-      params: { id },
-    })
-    .pipe(
-      map((data) => data),
-      catchError((err) => {
-        console.error('deleteProduct service: ', err);
-        return 'Deleting Failed';
+      .delete<string>(this.baseUrl, {
+        headers: this.header,
+        params: { id },
       })
-    );
+      .pipe(
+        switchMap((data) => {
+          console.log('delete response: ', data);
+          return this.getProducts();
+        }),
+        map((data) => {
+          console.log('GET response: ', data);
+          this.$products.update(() => data);
+          return 'Successfully Deleted';
+        }),
+        catchError((err) => {
+          console.error('deleteProduct service: ', err);
+          if (err.status === 200) {
+            return this.getProducts().pipe(
+              map((data) => {
+                this.$products.update(() => data);
+                return 'Successfully Deleted';
+              }),
+              catchError((getProductsErr) => {
+                console.error(
+                  'Error fetching products after delete: ',
+                  getProductsErr
+                );
+                return 'Deleting Failed';
+              })
+            );
+          } else {
+            return 'Deleting Failed';
+          }
+        })
+      );
   }
 }
