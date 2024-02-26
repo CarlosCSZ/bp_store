@@ -92,7 +92,7 @@ BpProducts is an intuitive and user-friendly platform that offers various functi
 
 ### Unit Tests
 
-- Execute `pnpm test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Execute `pnpm test` to execute the unit tests using jest
 
 ```bash
   pnpm test
