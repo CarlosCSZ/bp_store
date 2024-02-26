@@ -10,7 +10,7 @@ import { format, parseISO } from 'date-fns';
 
 import { ProductForm, ProductValidation } from '../../models/products';
 import { ProductsService } from '../../services/products.service';
-import { idValidation, dateReleaseValidation } from '../../common/formValidators';
+import { idValidation, dateReleaseValidation } from '../../common/validators/formValidators';
 import { Router } from '@angular/router';
 import { formatDateInput, formatDateStr } from '../../utils/datesFormater';
 

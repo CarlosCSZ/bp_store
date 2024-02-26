@@ -9,7 +9,7 @@ import {
 import { Product, ProductForm, ProductValidation } from '../../models/products';
 import { Router } from '@angular/router';
 import { format, parseISO } from 'date-fns';
-import { dateReleaseValidation } from '../../common/formValidators';
+import { dateReleaseValidation } from '../../common/validators/formValidators';
 import { CommonModule } from '@angular/common';
 import { formatDateInput, formatDateStr } from '../../utils/datesFormater';
 

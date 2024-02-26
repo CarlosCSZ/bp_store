@@ -8,18 +8,19 @@ import {
   inject,
 } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { format, parseISO } from 'date-fns';
+import { Router } from '@angular/router';
 
 import { Product, ProductPresentation } from '../../models/products';
 import { ProductsService } from '../../services/products.service';
 import { PaginationComponent } from '../pagination/pagination.component';
-import { Router } from '@angular/router';
 import { formatDateStr } from '../../utils/datesFormater';
+import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
+import { DeleteEvent } from '../../common/enums/deleteEvent.enum';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [HttpClientModule, PaginationComponent],
+  imports: [HttpClientModule, PaginationComponent, DeleteModalComponent],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
@@ -30,8 +31,10 @@ export class ProductsComponent implements OnInit, OnChanges {
   selectedQty: number = 5;
   resultQty: number = this.selectedQty;
   products: ProductPresentation[] = [];
+  selectedProduct!: Product;
   totalProducts: number = this.productsService.products.length;
   @Input() searchedValue: string = '';
+  openDeleteModal: boolean = false;
 
   constructor(private router: Router) {
     effect(() => {
@@ -42,7 +45,7 @@ export class ProductsComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.productsService.getProducts().subscribe({
-      next: () => console.log('Productos recuperados'),
+      next: () => console.log('[Product Component] Productos recuperados'),
       error: (err) => console.log(err),
     });
   }
@@ -96,18 +99,20 @@ export class ProductsComponent implements OnInit, OnChanges {
     const offset = this.selectedQty * (page - 1);
     const endSlice = this.selectedQty * page;
     this.products = this.productsService.products
-    .map((product) => {
-      return {
-        ...product,
-        showMenu: false,
-      };
-    })
-    .slice(offset, endSlice);
+      .map((product) => {
+        return {
+          ...product,
+          showMenu: false,
+        };
+      })
+      .slice(offset, endSlice);
     this.resultQty = this.products.length;
   }
 
   toggleMenu(productId: string) {
-    const productIndex = this.products.findIndex((data) => data.id === productId);
+    const productIndex = this.products.findIndex(
+      (data) => data.id === productId
+    );
     if (productIndex !== -1) {
       this.products.forEach((data) => {
         if (data.id === productId) {
@@ -120,12 +125,17 @@ export class ProductsComponent implements OnInit, OnChanges {
   }
 
   redirectPage(productPre: ProductPresentation, page: string) {
+    const { showMenu, ...product } = productPre;
+    this.productsService.updateSelectedProduct(product);
     if (page === 'delete') {
-      console.log(productPre.id);
+      this.selectedProduct = product;
+      this.openDeleteModal = true;
     } else {
-      const { showMenu, ...product } = productPre;
-      this.productsService.updateSelectedProduct(product);
       this.router.navigate([page]);
     }
+  }
+
+  onCloseModal(event: string) {
+    this.openDeleteModal = false;
   }
 }
