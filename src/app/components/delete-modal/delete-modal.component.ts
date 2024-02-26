@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Product } from '../../models/products';
 import { ProductsService } from '../../services/products.service';
 import { DeleteEvent } from '../../common/enums/deleteEvent.enum';
@@ -14,10 +14,10 @@ export class DeleteModalComponent {
   private productsService = inject(ProductsService);
 
   @Input() selectedProduct: Product | null = null;
-  @Output() closeModal = new EventEmitter<DeleteEvent>();
+  @Output() closeModal = new EventEmitter<[DeleteEvent, string]>();
 
   close() {
-    this.closeModal.emit(DeleteEvent.DEFAULT);
+    this.closeModal.emit([DeleteEvent.DEFAULT, '']);
   }
 
   deleteProduct() {
@@ -26,11 +26,11 @@ export class DeleteModalComponent {
       .subscribe({
         next: (data) => {
           console.log('response: ', data);
-          this.closeModal.emit(DeleteEvent.SUCCESS);
+          this.closeModal.emit([DeleteEvent.SUCCESS, '']);
         },
-        error: (err) => {
+        error: (err: Error) => {
           console.log(err);
-          //
+          this.closeModal.emit([DeleteEvent.FAILED, err.message]);
         }
       })
     }

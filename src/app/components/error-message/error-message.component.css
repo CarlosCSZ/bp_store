@@ -1,0 +1,26 @@
+.message-container {
+  display: none;
+  position: absolute;
+  top: 68px;
+  left: 0;
+  width: 100vw;
+  z-index: 0;
+  background-color: #e03535;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+.message-container.active {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.message-container img {
+  width: 25px;
+}
+.error-message {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+  padding: 8px;
+}

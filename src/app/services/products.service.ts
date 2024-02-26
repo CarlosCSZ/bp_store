@@ -1,10 +1,10 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode } from '@angular/common/http';
 
 import { Product, UpdateProduct } from '../models/products';
 import { environment } from '../../environments/environment.dev';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { of, Observable } from 'rxjs';
+import { of, Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -55,9 +55,12 @@ export class ProductsService {
           this.$products.update(() => data);
           return data;
         }),
-        catchError((err) => {
+        catchError((err: HttpErrorResponse) => {
           console.error('getProduct service: ', err);
-          return of([] as Product[]);
+          if (err.status === HttpStatusCode.BadRequest) {
+            return throwError(() => new Error('[GET] authorId is missing or unavailable'))
+          }
+          return throwError( () => new Error('[GET] Fallo el servidor'));
         })
       );
   }
@@ -87,8 +90,11 @@ export class ProductsService {
           this.$products.update((actProducts) => actProducts.concat(data));
           return this.products;
         }),
-        catchError((err) => {
+        catchError((err: HttpErrorResponse) => {
           console.error('createProduct service: ', err);
+          if (err.status === HttpStatusCode.BadRequest || 206) {
+            return throwError(() => new Error('Campo/s del formulario erroneo. Por favor asegurese de ingresar correctamente los datos.'))
+          }
           return of(this.products);
         })
       );
@@ -113,9 +119,15 @@ export class ProductsService {
 
           return 'Succesfully Updated';
         }),
-        catchError((err) => {
+        catchError((err: HttpErrorResponse) => {
           console.error('UpdateProduct service: ', err);
-          return 'Update Failed';
+          if (err.status === HttpStatusCode.BadRequest || HttpStatusCode.Unauthorized) {
+            return throwError(() => new Error('Ha surgido un problema, inténtalo más tarde.'));
+          }
+          if (err.status === 206) {
+            return throwError(() => new Error('Campo/s del formulario erroneo. Por favor asegurese de ingresar correctamente los datos.'));
+          }
+          return throwError(() => new Error('Ha surgido un problema, inténtalo más tarde.'));
         })
       );
   }
@@ -139,6 +151,12 @@ export class ProductsService {
         }),
         catchError((err) => {
           console.error('deleteProduct service: ', err);
+          if (err.status === HttpStatusCode.BadRequest) {
+            return throwError(() => new Error('Ha surgido un problema borrando el producto, inténtalo más tarde.'));
+          }
+          if (err.status === HttpStatusCode.NotFound) {
+            return throwError(() => new Error('Ha surgido un problema, Por favor recargue la página.'));
+          }
           if (err.status === 200) {
             return this.getProducts().pipe(
               map((data) => {
@@ -150,11 +168,11 @@ export class ProductsService {
                   'Error fetching products after delete: ',
                   getProductsErr
                 );
-                return 'Deleting Failed';
+                return throwError(() => new Error('Deleting Failed'));
               })
             );
           } else {
-            return 'Deleting Failed';
+            return throwError(() => new Error('Deleting Failed'));
           }
         })
       );

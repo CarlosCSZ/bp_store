@@ -20,10 +20,10 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('bp-products');
   });
 
-  test('should render title', () => {
+  test('should match the initial snapshot', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, bp-products');
+    expect(compiled).toMatchSnapshot();
   });
 });

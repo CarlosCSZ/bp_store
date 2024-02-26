@@ -12,11 +12,12 @@ import { format, parseISO } from 'date-fns';
 import { dateReleaseValidation } from '../../common/validators/formValidators';
 import { CommonModule } from '@angular/common';
 import { formatDateInput, formatDateStr } from '../../utils/datesFormater';
+import { ErrorMessageComponent } from '@app/components/error-message/error-message.component';
 
 @Component({
   selector: 'app-edit-product',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ErrorMessageComponent],
   templateUrl: './edit-product.component.html',
   styleUrl: './edit-product.component.css',
 })
@@ -33,6 +34,8 @@ export class EditProductComponent implements OnInit {
     date_revision: false,
   };
   selectedProduct: Product = this.productsService.selectedProduct;
+  error: boolean = false;
+  errorMessage: string = '';
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.initializeForm();
@@ -102,6 +105,7 @@ export class EditProductComponent implements OnInit {
       this.productInvalid[formValue as keyof ProductValidation] = false;
     }
     console.log('Form: ', this.productForm.controls);
+    this.error = false;
   }
 
   formatDateRevision(event: Event) {
@@ -155,10 +159,12 @@ export class EditProductComponent implements OnInit {
             console.log('Product Updated Successfully');
             this.router.navigate(['home']);
           },
-          error: (err) => {
+          error: (err: Error) => {
             console.error('Request Failed: ', err);
             this.productForm.reset();
             this.productForm.controls['id'].setValue(this.selectedProduct.id);
+            this.error = true;
+            this.errorMessage = err.message;
           },
         });
     }

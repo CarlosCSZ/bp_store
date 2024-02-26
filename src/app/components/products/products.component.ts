@@ -16,11 +16,17 @@ import { PaginationComponent } from '../pagination/pagination.component';
 import { formatDateStr } from '../../utils/datesFormater';
 import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 import { DeleteEvent } from '../../common/enums/deleteEvent.enum';
+import { ErrorMessageComponent } from '../error-message/error-message.component';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [HttpClientModule, PaginationComponent, DeleteModalComponent],
+  imports: [
+    HttpClientModule,
+    PaginationComponent,
+    DeleteModalComponent,
+    ErrorMessageComponent,
+  ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
@@ -35,6 +41,8 @@ export class ProductsComponent implements OnInit, OnChanges {
   totalProducts: number = this.productsService.products.length;
   @Input() searchedValue: string = '';
   openDeleteModal: boolean = false;
+  error: boolean = false;
+  errorMessage: string = '';
 
   constructor(private router: Router) {
     effect(() => {
@@ -46,7 +54,11 @@ export class ProductsComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.productsService.getProducts().subscribe({
       next: () => console.log('[Product Component] Productos recuperados'),
-      error: (err) => console.log(err),
+      error: (err) => {
+        console.log(err);
+        this.error = true;
+        this.errorMessage = 'Ha surgido un problema, inténtalo más tarde.'
+      },
     });
   }
 
@@ -135,7 +147,16 @@ export class ProductsComponent implements OnInit, OnChanges {
     }
   }
 
-  onCloseModal(event: string) {
+  onCloseModal(event: [DeleteEvent, string]) {
     this.openDeleteModal = false;
+
+    if (event[0] === DeleteEvent.FAILED) {
+      this.error = true;
+      this.errorMessage = event[1];
+
+      setTimeout(() => {
+        this.error = false;
+      }, 3000)
+    }
   }
 }
