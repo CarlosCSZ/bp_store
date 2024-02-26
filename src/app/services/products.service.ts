@@ -18,9 +18,25 @@ export class ProductsService {
   });
 
   private $products = signal<Product[]>([]);
+  private $selectedProduct = signal<Product>({
+    id: '',
+    name: '',
+    description: '',
+    logo: '',
+    date_release: '',
+    date_revision: ''
+  });
 
   get products(): Product[] {
     return this.$products();
+  }
+
+  get selectedProduct(): Product {
+    return this.$selectedProduct();
+  }
+
+  updateSelectedProduct(product: Product) {
+    this.$selectedProduct.update(() => product);
   }
 
   getProducts(): Observable<Product[]> {
@@ -71,7 +87,7 @@ export class ProductsService {
       );
   }
 
-  UpdateProduct(updates: UpdateProduct): Observable<string> {
+  updateProduct(updates: UpdateProduct): Observable<string> {
     const productIndex = this.$products().findIndex(
       (product) => product.id === updates.id
     );

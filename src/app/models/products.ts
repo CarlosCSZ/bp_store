@@ -9,6 +9,10 @@ interface Product {
   date_revision: string;
 }
 
+interface ProductPresentation extends Product {
+  showMenu: boolean;
+}
+
 interface UpdateProduct extends Partial<Product> {
   id: string;
 }
@@ -31,4 +35,4 @@ interface ProductValidation {
   date_revision: boolean;
 }
 
-export { Product, UpdateProduct, ProductForm, ProductValidation };
+export { Product, ProductPresentation, UpdateProduct, ProductForm, ProductValidation };

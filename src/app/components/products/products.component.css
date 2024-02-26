@@ -64,7 +64,55 @@ img {
 .options {
   width: 2%;
 }
-.options img {
-  max-width: 20px;
+.options.menu {
+  width: 20px;
   cursor: pointer;
+}
+
+.options-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  position: absolute;
+  width: 90px;
+  background-color: #f0f0f0;
+  right: 80px;
+  padding: 0;
+  border-radius: 5px;
+  z-index: 2;
+}
+.options-menu li {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  margin: 0 auto;
+  cursor: pointer;
+  list-style: none;
+  font-size: 1.4rem;
+  border-radius: 5px;
+}
+.options-menu li:hover {
+  box-shadow: 0 0 5px var(--shadow-box-color);
+}
+.options-menu li img {
+  width: 20px;
+}
+
+@media screen and (max-width: 500px) {
+  th, td {
+    min-width: 110px;
+  }
+  .options {
+    min-width: 20px;
+  }
+  .options-menu {
+    right: 50px;
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .options-menu {
+    right: 120px;
+  }
 }

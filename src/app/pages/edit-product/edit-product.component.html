@@ -1,10 +1,10 @@
-<section class="new-product">
+<section class="edit-product">
   <div class="title">
     <div class="back-home" (click)="homePage()">
       <img src="assets/svg/home.svg" alt="home">
       <p>Home</p>
     </div>
-    <h2>Formulario de Registro</h2>
+    <h2>Formulario de Edición</h2>
   </div>
   <form
     class="product-form"
@@ -20,14 +20,11 @@
         formControlName="id"
         id="id"
         maxlength="10"
+        readonly
       />
       @if (productForm.controls["id"].dirty &&
       productForm.controls["id"].hasError('minlength')) {
       <small class="warning">ID debe contener entre 2 y 10 caracteres</small>
-      } @else if (productForm.controls["id"].dirty &&
-      (productForm.controls["id"].hasError('productExist') ||
-      productForm.controls["id"].hasError('required'))) {
-      <small class="warning">ID no valido</small>
       }
     </div>
     <div class="form-value">

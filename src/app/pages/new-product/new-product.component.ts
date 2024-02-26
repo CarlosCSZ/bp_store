@@ -6,12 +6,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { format, getMonth, parseISO } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 
 import { ProductForm, ProductValidation } from '../../models/products';
 import { ProductsService } from '../../services/products.service';
-import { idValidation, dateReleaseValidation } from './formValidators';
+import { idValidation, dateReleaseValidation } from '../../common/formValidators';
 import { Router } from '@angular/router';
+import { formatDateInput, formatDateStr } from '../../utils/datesFormater';
 
 @Component({
   selector: 'app-new-product',
@@ -24,7 +25,6 @@ export class NewProductComponent {
   private productsService = inject(ProductsService);
 
   productForm!: FormGroup;
-  dateRevisionValue: string = '';
   productInvalid: ProductValidation = {
     id: false,
     name: false,
@@ -34,7 +34,10 @@ export class NewProductComponent {
     date_revision: false,
   };
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router
+  ) {
     this.initializeForm();
   }
 
@@ -66,17 +69,21 @@ export class NewProductComponent {
       date_release: this.fb.nonNullable.control(
         '',
         [Validators.required],
-        dateReleaseValidation
+        dateReleaseValidation()
       ),
       date_revision: this.fb.nonNullable.control('', [Validators.required]),
     });
   }
 
-  chechingValue(event: Event) {
+  checkingValue(event: Event) {
+    const keyBoardEvent = event as KeyboardEvent;
+    if (keyBoardEvent.key === 'Enter') {
+      event.preventDefault();
+    }
+
     const input = event.target as HTMLInputElement;
     const formValue = input.id;
     if (this.productForm.controls[formValue].invalid) {
-      console.log('invalido');
       this.productInvalid[formValue as keyof ProductValidation] = true;
     } else {
       this.productInvalid[formValue as keyof ProductValidation] = false;
@@ -85,34 +92,20 @@ export class NewProductComponent {
       'Form: ',
       this.productForm.controls
     );
-    console.log('check invalidation: ', this.productForm.valid)
   }
 
   formatDateRevision(event: Event) {
-    this.chechingValue(event);
+    this.checkingValue(event);
     const input = event.target as HTMLInputElement;
     const date = input.value;
     const inputId = input.id;
     if (this.productInvalid[inputId as keyof ProductValidation]) {
       return;
     }
-    const parsedDate = this.formatDateStr(date);
+    const parsedDate = formatDateStr(date);
     const dateRevision = new Date(parsedDate + ' 23:59');
     dateRevision.setFullYear(dateRevision.getFullYear() + 1);
-    console.log('date: ', parsedDate);
-    console.log('dateRevision: ', dateRevision.toISOString());
-    this.dateRevisionValue = this.formatDateInput(dateRevision.toISOString());
-    this.productForm.controls['date_revision'].setValue(this.dateRevisionValue);
-  }
-
-  formatDateStr(date: string): string {
-    const parsedDate = parseISO(date);
-    return format(parsedDate, 'yyyy/MM/dd');
-  }
-
-  formatDateInput(date: string): string {
-    const parsedDate = parseISO(date);
-    return format(parsedDate, 'yyyy-MM-dd');
+    this.productForm.controls['date_revision'].setValue(formatDateInput(dateRevision.toISOString()));
   }
 
   homePage() {
@@ -124,16 +117,14 @@ export class NewProductComponent {
   }
 
   onSubmit() {
-    console.log('date-release: ', this.productForm.controls['date_release'].value)
-    console.log('date_revision: ', this.productForm.controls['date_revision'].value)
     if (this.productForm.valid) {
       this.productsService.createProduct({
         id: this.productForm.controls['id'].value,
         name: this.productForm.controls['name'].value,
         description: this.productForm.controls['description'].value,
         logo: this.productForm.controls['logo'].value,
-        date_release: new Date(this.formatDateStr(this.productForm.controls['date_release'].value + ' 23:59')).toISOString(),
-        date_revision: new Date(this.formatDateStr(this.productForm.controls['date_revision'].value + ' 23:59')).toISOString(),
+        date_release: new Date(formatDateStr(this.productForm.controls['date_release'].value + ' 23:59')).toISOString(),
+        date_revision: new Date(formatDateStr(this.productForm.controls['date_revision'].value + ' 23:59')).toISOString(),
       })
       .subscribe({
         next: () => {
