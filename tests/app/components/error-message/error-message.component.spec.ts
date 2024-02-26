@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ErrorMessageComponent } from '@app/components/error-message/error-message.component';
+import { ErrorMessageComponent } from '../../../../src/app/components/error-message/error-message.component';
 
 describe('ErrorMessageComponent', () => {
   let component: ErrorMessageComponent;

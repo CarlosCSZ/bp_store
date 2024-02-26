@@ -1,13 +1,14 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { ProductsComponent } from '../../components/products/products.component';
 import { Router } from '@angular/router';
+
+import { ProductsComponent } from '../../components/products/products.component';
 
 @Component({
   selector: 'app-presentation',
   standalone: true,
   imports: [ProductsComponent],
   templateUrl: './presentation.component.html',
-  styleUrl: './presentation.component.css',
+  styleUrls: ['./presentation.component.css'],
 })
 export class PresentationComponent implements OnInit {
   searchedValue = signal<string>('');

@@ -6,11 +6,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Product, ProductForm, ProductValidation } from '../../models/products';
 import { Router } from '@angular/router';
-import { format, parseISO } from 'date-fns';
-import { dateReleaseValidation } from '../../common/validators/formValidators';
 import { CommonModule } from '@angular/common';
+
+import { Product, ProductForm, ProductValidation } from '../../models/products';
+import { dateReleaseValidation } from '../../common/validators/formValidators';
 import { formatDateInput, formatDateStr } from '../../utils/datesFormater';
 import { ErrorMessageComponent } from '@app/components/error-message/error-message.component';
 
