@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AppComponent should match the initial snapshot 1`] = `
+<div
+  id="root2"
+>
+  <main
+    class="main"
+  >
+    <div
+      class="header"
+    >
+      <img
+        alt="portada"
+        class="header-img"
+        src="assets/img/logo_banco_pichincha_portada.jpg"
+      />
+    </div>
+    <div
+      class="body-route"
+    >
+      <router-outlet />
+      
+    </div>
+  </main>
+</div>
+`;

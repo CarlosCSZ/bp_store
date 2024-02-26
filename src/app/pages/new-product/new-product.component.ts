@@ -6,18 +6,21 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { format, parseISO } from 'date-fns';
 
 import { ProductForm, ProductValidation } from '../../models/products';
 import { ProductsService } from '../../services/products.service';
-import { idValidation, dateReleaseValidation } from '../../common/validators/formValidators';
+import {
+  idValidation,
+  dateReleaseValidation,
+} from '../../common/validators/formValidators';
 import { Router } from '@angular/router';
 import { formatDateInput, formatDateStr } from '../../utils/datesFormater';
+import { ErrorMessageComponent } from '@app/components/error-message/error-message.component';
 
 @Component({
   selector: 'app-new-product',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ErrorMessageComponent],
   templateUrl: './new-product.component.html',
   styleUrl: './new-product.component.css',
 })
@@ -33,11 +36,10 @@ export class NewProductComponent {
     date_release: false,
     date_revision: false,
   };
+  error: boolean = false;
+  errorMessage: string = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router
-  ) {
+  constructor(private fb: FormBuilder, private router: Router) {
     this.initializeForm();
   }
 
@@ -88,10 +90,8 @@ export class NewProductComponent {
     } else {
       this.productInvalid[formValue as keyof ProductValidation] = false;
     }
-    console.log(
-      'Form: ',
-      this.productForm.controls
-    );
+    console.log('Form: ', this.productForm.controls);
+    this.error = false;
   }
 
   formatDateRevision(event: Event) {
@@ -105,11 +105,13 @@ export class NewProductComponent {
     const parsedDate = formatDateStr(date);
     const dateRevision = new Date(parsedDate + ' 23:59');
     dateRevision.setFullYear(dateRevision.getFullYear() + 1);
-    this.productForm.controls['date_revision'].setValue(formatDateInput(dateRevision.toISOString()));
+    this.productForm.controls['date_revision'].setValue(
+      formatDateInput(dateRevision.toISOString())
+    );
   }
 
   homePage() {
-    this.router.navigate(['home'])
+    this.router.navigate(['home']);
   }
 
   onReset() {
@@ -118,24 +120,35 @@ export class NewProductComponent {
 
   onSubmit() {
     if (this.productForm.valid) {
-      this.productsService.createProduct({
-        id: this.productForm.controls['id'].value,
-        name: this.productForm.controls['name'].value,
-        description: this.productForm.controls['description'].value,
-        logo: this.productForm.controls['logo'].value,
-        date_release: new Date(formatDateStr(this.productForm.controls['date_release'].value + ' 23:59')).toISOString(),
-        date_revision: new Date(formatDateStr(this.productForm.controls['date_revision'].value + ' 23:59')).toISOString(),
-      })
-      .subscribe({
-        next: () => {
-          console.log('Product Created Successfully');
-          this.router.navigate(['home'])
-        },
-        error: (err) => {
-          console.error('Request Failed: ', err);
-          this.productForm.reset();
-        }
-      })
+      this.productsService
+        .createProduct({
+          id: this.productForm.controls['id'].value,
+          name: this.productForm.controls['name'].value,
+          description: this.productForm.controls['description'].value,
+          logo: this.productForm.controls['logo'].value,
+          date_release: new Date(
+            formatDateStr(
+              this.productForm.controls['date_release'].value + ' 23:59'
+            )
+          ).toISOString(),
+          date_revision: new Date(
+            formatDateStr(
+              this.productForm.controls['date_revision'].value + ' 23:59'
+            )
+          ).toISOString(),
+        })
+        .subscribe({
+          next: () => {
+            console.log('Product Created Successfully');
+            this.router.navigate(['home']);
+          },
+          error: (err: Error) => {
+            console.error('Request Failed: ', err);
+            this.productForm.reset();
+            this.error = true;
+            this.errorMessage = err.message;
+          },
+        });
     }
   }
 }

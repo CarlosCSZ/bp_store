@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DeleteModalComponent } from './delete-modal.component';
+import { DeleteModalComponent } from '@app/components/delete-modal/delete-modal.component';
 
 describe('DeleteModalComponent', () => {
   let component: DeleteModalComponent;
@@ -11,7 +11,7 @@ describe('DeleteModalComponent', () => {
       imports: [DeleteModalComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(DeleteModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
