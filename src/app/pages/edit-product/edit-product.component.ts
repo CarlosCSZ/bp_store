@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 import { Product, ProductForm, ProductValidation } from '../../models/products';
 import { dateReleaseValidation } from '../../common/validators/formValidators';
 import { formatDateInput, formatDateStr } from '../../utils/datesFormater';
-import { ErrorMessageComponent } from '@app/components/error-message/error-message.component';
+import { ErrorMessageComponent } from '../../components/error-message/error-message.component';
 
 @Component({
   selector: 'app-edit-product',

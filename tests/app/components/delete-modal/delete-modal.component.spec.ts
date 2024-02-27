@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 import { DeleteModalComponent } from '../../../../src/app/components/delete-modal/delete-modal.component';
+import { ProductsService } from '../../../../src/app/services/products.service';
 
 describe('DeleteModalComponent', () => {
   let component: DeleteModalComponent;
@@ -8,7 +10,8 @@ describe('DeleteModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DeleteModalComponent]
+      imports: [HttpClientModule],
+      providers: [ProductsService],
     })
     .compileComponents();
 

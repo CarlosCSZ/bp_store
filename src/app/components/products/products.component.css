@@ -8,7 +8,7 @@
 .products-table {
   margin: 0 auto;
   width: 98%;
-  max-height: 320px;
+  height: 320px;
   overflow: auto;
 }
 .products-table::-webkit-scrollbar {

@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "jest",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "test:coverage": "jest --coverage"
   },
   "private": true,
   "dependencies": {
@@ -38,6 +39,11 @@
     "preset": "jest-preset-angular",
     "setupFilesAfterEnv": [
       "<rootDir>/setup-jest.ts"
+    ],
+    "collectCoverage": false,
+    "coverageReporters": [
+      "lcov",
+      "text"
     ]
   }
 }

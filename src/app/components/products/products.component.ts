@@ -17,6 +17,7 @@ import { formatDateStr } from '../../utils/datesFormater';
 import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 import { DeleteEvent } from '../../common/enums/deleteEvent.enum';
 import { ErrorMessageComponent } from '../error-message/error-message.component';
+import { GhostProductsComponent } from '../ghost-products/ghost-products.component';
 
 @Component({
   selector: 'app-products',
@@ -26,6 +27,7 @@ import { ErrorMessageComponent } from '../error-message/error-message.component'
     PaginationComponent,
     DeleteModalComponent,
     ErrorMessageComponent,
+    GhostProductsComponent,
   ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
@@ -53,7 +55,10 @@ export class ProductsComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.productsService.getProducts().subscribe({
-      next: () => console.log('[Product Component] Productos recuperados'),
+      next: () => {
+        console.log('[Product Component] Productos recuperados');
+        this.resultsToShow();
+      },
       error: (err) => {
         console.log(err);
         this.error = true;

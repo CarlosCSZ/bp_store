@@ -1,0 +1,29 @@
+<section class="products-list ghost">
+  <div class="products-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Logo</th>
+          <th>Nombre del producto</th>
+          <th>Descripción <span>i</span></th>
+          <th>Fecha de liberación <span>i</span></th>
+          <th>Fecha de reestructuración <span>i</span></th>
+          <th class="options"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (product of products; track $index) {
+        <tr>
+          <td><div class="ghost-logo"></div></td>
+          <td><div class="ghost-text"></div></td>
+          <td><div class="ghost-text"></div></td>
+          <td><div class="ghost-text"></div></td>
+          <td><div class="ghost-text"></div></td>
+          <td class="options"><div class="ghost-options"></div></td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <app-pagination></app-pagination>
+</section>
