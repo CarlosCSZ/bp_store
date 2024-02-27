@@ -2,7 +2,7 @@
   [activate]="error"
   [message]="errorMessage"
 ></app-error-message>
-@if (products.length > 0) {
+@if (!loading) {
 <section class="products-list">
   <div class="products-table">
     <table>

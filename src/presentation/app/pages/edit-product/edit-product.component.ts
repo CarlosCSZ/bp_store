@@ -1,5 +1,4 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ProductsService } from '../../services/products.service';
 import {
   FormBuilder,
   FormGroup,
@@ -9,20 +8,33 @@ import {
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { Product, ProductForm, ProductValidation } from '../../models/products';
+import {
+  Product,
+  ProductForm,
+  ProductValidation,
+} from '../../../../domain/models/products.model';
 import { dateReleaseValidation } from '../../common/validators/formValidators';
 import { formatDateInput, formatDateStr } from '../../utils/datesFormater';
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component';
+import { UpdateProductUseCase } from 'src/domain/usecases/update-product.usecase';
+import { GetSelectedProductUseCase } from 'src/domain/usecases/get-selectedProduct.usecase';
+import { DataModule } from 'src/data/data.module';
 
 @Component({
   selector: 'app-edit-product',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ErrorMessageComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ErrorMessageComponent,
+    DataModule,
+  ],
   templateUrl: './edit-product.component.html',
   styleUrl: './edit-product.component.css',
 })
 export class EditProductComponent implements OnInit {
-  private productsService = inject(ProductsService);
+  private updateProductUC = inject(UpdateProductUseCase);
+  private selectedProductUC = inject(GetSelectedProductUseCase);
 
   productForm!: FormGroup;
   productInvalid: ProductValidation = {
@@ -33,7 +45,7 @@ export class EditProductComponent implements OnInit {
     date_release: false,
     date_revision: false,
   };
-  selectedProduct: Product = this.productsService.selectedProduct;
+  selectedProduct: Product = this.selectedProductUC.execute();
   error: boolean = false;
   errorMessage: string = '';
 
@@ -137,8 +149,8 @@ export class EditProductComponent implements OnInit {
 
   onSubmit() {
     if (this.productForm.valid) {
-      this.productsService
-        .updateProduct({
+      this.updateProductUC
+        .execute({
           id: this.productForm.controls['id'].value,
           name: this.productForm.controls['name'].value,
           description: this.productForm.controls['description'].value,
