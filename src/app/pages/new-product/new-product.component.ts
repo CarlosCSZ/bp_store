@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -15,7 +15,7 @@ import {
   dateReleaseValidation,
 } from '../../common/validators/formValidators';
 import { formatDateInput, formatDateStr } from '../../utils/datesFormater';
-import { ErrorMessageComponent } from '@app/components/error-message/error-message.component';
+import { ErrorMessageComponent } from '../../components/error-message/error-message.component';
 
 @Component({
   selector: 'app-new-product',
@@ -140,6 +140,7 @@ export class NewProductComponent {
         .subscribe({
           next: () => {
             console.log('Product Created Successfully');
+            this.productForm.reset();
             this.router.navigate(['home']);
           },
           error: (err: Error) => {

@@ -6,8 +6,6 @@ import {
   tick,
 } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Router } from '@angular/router';
-import { Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -16,8 +14,6 @@ import { PresentationComponent } from '../../../../src/app/pages/presentation/pr
 describe('[PresentationComponent]', () => {
   let component: PresentationComponent;
   let fixture: ComponentFixture<PresentationComponent>;
-  let router: Router;
-  let location: Location;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -26,8 +22,6 @@ describe('[PresentationComponent]', () => {
 
     fixture = TestBed.createComponent(PresentationComponent);
     component = fixture.componentInstance;
-    router = TestBed.inject(Router);
-    location = TestBed.inject(Location);
     fixture.detectChanges();
   }));
 
