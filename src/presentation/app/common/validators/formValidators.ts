@@ -3,11 +3,11 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { format, parseISO } from 'date-fns';
 
-import { ProductsService } from '../../services/products.service';
+import { ProductValidationUseCase } from 'src/domain/usecases/product-validation.usecase';
 
-function idValidation(productsService: ProductsService): AsyncValidatorFn {
+function idValidation(productValidationUC: ProductValidationUseCase): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
-    return productsService.productValidation(control.value)
+    return productValidationUC.execute(control.value)
     .pipe(
       map((isValid) => {
         return isValid ? null : { productExist: true };
