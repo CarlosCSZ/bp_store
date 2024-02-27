@@ -8,24 +8,35 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { ProductForm, ProductValidation } from '../../models/products';
-import { ProductsService } from '../../services/products.service';
+import {
+  ProductForm,
+  ProductValidation,
+} from '../../../../domain/models/products.model';
 import {
   idValidation,
   dateReleaseValidation,
 } from '../../common/validators/formValidators';
 import { formatDateInput, formatDateStr } from '../../utils/datesFormater';
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component';
+import { DataModule } from 'src/data/data.module';
+import { CreateProductUseCase } from 'src/domain/usecases/create-product.usecase';
+import { ProductValidationUseCase } from 'src/domain/usecases/product-validation.usecase';
 
 @Component({
   selector: 'app-new-product',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ErrorMessageComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ErrorMessageComponent,
+    DataModule,
+  ],
   templateUrl: './new-product.component.html',
   styleUrl: './new-product.component.css',
 })
 export class NewProductComponent {
-  private productsService = inject(ProductsService);
+  private createProductUC = inject(CreateProductUseCase);
+  private producValidationtUC = inject(ProductValidationUseCase);
 
   productForm!: FormGroup;
   productInvalid: ProductValidation = {
@@ -52,7 +63,7 @@ export class NewProductComponent {
           Validators.minLength(3),
           Validators.maxLength(10),
         ],
-        idValidation(this.productsService)
+        idValidation(this.producValidationtUC)
       ),
       name: this.fb.nonNullable.control('', [
         Validators.required,
@@ -120,8 +131,8 @@ export class NewProductComponent {
 
   onSubmit() {
     if (this.productForm.valid) {
-      this.productsService
-        .createProduct({
+      this.createProductUC
+        .execute({
           id: this.productForm.controls['id'].value,
           name: this.productForm.controls['name'].value,
           description: this.productForm.controls['description'].value,

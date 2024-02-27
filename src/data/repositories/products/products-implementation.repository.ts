@@ -1,15 +1,16 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode } from '@angular/common/http';
 
-import { Product, UpdateProduct } from '../models/products';
-import { environment } from '../../environments/environment.dev';
+import { Product, UpdateProduct } from '../../../domain/models/products.model';
+import { environment } from '../../../environments/environment.dev';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { of, Observable, throwError } from 'rxjs';
+import { ProductsRepository } from 'src/domain/repositories/products.repository';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProductsService {
+export class ProductsImplementationRepository extends ProductsRepository {
   private http: HttpClient = inject(HttpClient);
   private baseUrl: string = environment.API_URL + '/bp/products';
   private header: HttpHeaders = new HttpHeaders({
@@ -32,6 +33,11 @@ export class ProductsService {
     )
   );
 
+  constructor() {
+    super();
+  }
+
+
   get products(): Product[] {
     return this.$products();
   }
@@ -40,14 +46,14 @@ export class ProductsService {
     return this.$selectedProduct();
   }
 
-  updateSelectedProduct(product: Product) {
+  updateSelectedProduct(product: Product): void {
     this.$selectedProduct.update(() => {
       sessionStorage.setItem('selectedProduct', JSON.stringify(product));
       return product;
     });
   }
 
-  getProducts(): Observable<Product[]> {
+  requestProducts(): Observable<Product[]> {
     return this.http
       .get<Product[]>(this.baseUrl, { headers: this.header })
       .pipe(
@@ -66,7 +72,7 @@ export class ProductsService {
   }
 
   productValidation(id: string): Observable<boolean> {
-    return this.getProducts().pipe(
+    return this.requestProducts().pipe(
       map((products) => {
         const productFound = products.find((prod) => prod.id === id);
         if (productFound) {
@@ -142,7 +148,7 @@ export class ProductsService {
       .pipe(
         switchMap((data) => {
           console.log('delete response: ', data);
-          return this.getProducts();
+          return this.requestProducts();
         }),
         map((data) => {
           console.log('GET response: ', data);
@@ -158,7 +164,7 @@ export class ProductsService {
             return throwError(() => new Error('Ha surgido un problema, Por favor recargue la página.'));
           }
           if (err.status === 200) {
-            return this.getProducts().pipe(
+            return this.requestProducts().pipe(
               map((data) => {
                 this.$products.update(() => data);
                 return 'Successfully Deleted';

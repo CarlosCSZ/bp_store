@@ -10,14 +10,20 @@ import {
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { Product, ProductPresentation } from '../../models/products';
-import { ProductsService } from '../../services/products.service';
+import {
+  Product,
+  ProductPresentation,
+} from '../../../../domain/models/products.model';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { formatDateStr } from '../../utils/datesFormater';
 import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 import { DeleteEvent } from '../../common/enums/deleteEvent.enum';
 import { ErrorMessageComponent } from '../error-message/error-message.component';
 import { GhostProductsComponent } from '../ghost-products/ghost-products.component';
+import { DataModule } from 'src/data/data.module';
+import { RequestProductsUseCase } from 'src/domain/usecases/request-products.usecase';
+import { GetProductsUseCase } from 'src/domain/usecases/get-products.usecase';
+import { UpdateSelectedProductUseCase } from 'src/domain/usecases/update-selectedProduct.usecase';
 
 @Component({
   selector: 'app-products',
@@ -28,23 +34,27 @@ import { GhostProductsComponent } from '../ghost-products/ghost-products.compone
     DeleteModalComponent,
     ErrorMessageComponent,
     GhostProductsComponent,
+    DataModule,
   ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
 export class ProductsComponent implements OnInit, OnChanges {
-  private productsService = inject(ProductsService);
+  private reqProductsUC = inject(RequestProductsUseCase);
+  private getProductsUC = inject(GetProductsUseCase);
+  private updateSelectedProductUC = inject(UpdateSelectedProductUseCase);
 
   showDropdown: boolean = false;
   selectedQty: number = 5;
   resultQty: number = this.selectedQty;
   products: ProductPresentation[] = [];
   selectedProduct!: Product;
-  totalProducts: number = this.productsService.products.length;
+  totalProducts: number = this.getProductsUC.execute().length;
   @Input() searchedValue: string = '';
   openDeleteModal: boolean = false;
   error: boolean = false;
   errorMessage: string = '';
+  loading: boolean = true;
 
   constructor(private router: Router) {
     effect(() => {
@@ -54,15 +64,16 @@ export class ProductsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.productsService.getProducts().subscribe({
+    this.reqProductsUC.execute().subscribe({
       next: () => {
         console.log('[Product Component] Productos recuperados');
         this.resultsToShow();
+        this.loading = false;
       },
       error: (err) => {
         console.log(err);
         this.error = true;
-        this.errorMessage = 'Ha surgido un problema, inténtalo más tarde.'
+        this.errorMessage = 'Ha surgido un problema, inténtalo más tarde.';
       },
     });
   }
@@ -86,7 +97,7 @@ export class ProductsComponent implements OnInit, OnChanges {
 
   resultsToShow() {
     if (this.totalProducts > this.selectedQty) {
-      this.products = this.productsService.products
+      this.products = this.getProductsUC.execute()
         .map((product) => {
           return {
             ...product,
@@ -96,13 +107,13 @@ export class ProductsComponent implements OnInit, OnChanges {
         .slice(0, this.selectedQty);
       this.resultQty = this.selectedQty;
     } else {
-      this.products = this.productsService.products.map((product) => {
+      this.products = this.getProductsUC.execute().map((product) => {
         return {
           ...product,
           showMenu: false,
         };
       });
-      this.totalProducts = this.productsService.products.length;
+      this.totalProducts = this.getProductsUC.execute().length;
       this.resultQty = this.products.length;
     }
   }
@@ -115,7 +126,7 @@ export class ProductsComponent implements OnInit, OnChanges {
   onPageChanged(page: number) {
     const offset = this.selectedQty * (page - 1);
     const endSlice = this.selectedQty * page;
-    this.products = this.productsService.products
+    this.products = this.getProductsUC.execute()
       .map((product) => {
         return {
           ...product,
@@ -143,7 +154,7 @@ export class ProductsComponent implements OnInit, OnChanges {
 
   redirectPage(productPre: ProductPresentation, page: string) {
     const { showMenu, ...product } = productPre;
-    this.productsService.updateSelectedProduct(product);
+    this.updateSelectedProductUC.execute(product);
     if (page === 'delete') {
       this.selectedProduct = product;
       this.openDeleteModal = true;
@@ -161,7 +172,7 @@ export class ProductsComponent implements OnInit, OnChanges {
 
       setTimeout(() => {
         this.error = false;
-      }, 3000)
+      }, 3000);
     }
   }
 }
